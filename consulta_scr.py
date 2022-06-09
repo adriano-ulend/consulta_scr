@@ -1,8 +1,9 @@
 import pandas as pd
 import json
 
+
 def main():
-    with open('/home/adriano/dev/projects/Teste/source/teste.csv', 'r', encoding='ISO-8859-1') as file:
+    with open('/home/adriano/dev/projects/consulta_scr/source/teste2.csv', 'r', encoding='ISO-8859-1') as file:
         sheet = pd.read_csv(file, header=0, sep=',')
         df = pd.DataFrame(sheet)
         df.insert(len(df.columns)-1, 'message.listaDeResumoDasOperacoes', df.pop('message.listaDeResumoDasOperacoes'))

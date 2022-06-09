@@ -1,0 +1,73 @@
+message.listaDeResumoDasOperacoes
+
+[
+{"variacaoCambial":"N",
+"listaDeVencimentos":[
+	{"codigoVencimento":"v140","valorVencimento":"111785.26"},
+	{"codigoVencimento":"v160","valorVencimento":"44666.66"},
+	{"codigoVencimento":"v165","valorVencimento":"44666.70"}
+	],
+"modalidade":"0802"},
+{"listaDeVencimentos":[
+	{"codigoVencimento":"v130","valorVencimento":"5811.08"},
+	{"codigoVencimento":"v150","valorVencimento":"34866.48"},
+	{"codigoVencimento":"v120","valorVencimento":"5811.08"},
+	{"codigoVencimento":"v175","valorVencimento":"23130.78"},
+	{"codigoVencimento":"v220","valorVencimento":"3855.04"},
+	{"codigoVencimento":"v170","valorVencimento":"46261.56"},
+	{"valorVencimento":"17433.24","codigoVencimento":"v140"},
+	{"codigoVencimento":"v110","valorVencimento":"5811.08"},
+	{"codigoVencimento":"v165","valorVencimento":"67777.01"},
+	{"codigoVencimento":"v210","valorVencimento":"5810.93"},
+	{"codigoVencimento":"v160","valorVencimento":"69732.96"}
+	],
+"modalidade":"0203","variacaoCambial":"N"},
+{"listaDeVencimentos":[
+	{"codigoVencimento":"v130","valorVencimento":"2620.94"},
+	{"codigoVencimento":"v150","valorVencimento":"15725.64"},
+	{"codigoVencimento":"v120","valorVencimento":"2620.94"},
+	{"codigoVencimento":"v220","valorVencimento":"2621.11"},
+	{"codigoVencimento":"v170","valorVencimento":"7862.82"},
+	{"codigoVencimento":"v140","valorVencimento":"7862.82"},
+	{"codigoVencimento":"v110","valorVencimento":"5241.88"},
+	{"codigoVencimento":"v165","valorVencimento":"28830.34"},
+	{"codigoVencimento":"v160","valorVencimento":"31451.28"}
+	],
+"modalidade":"0401","variacaoCambial":"N"},
+{"listaDeVencimentos":[
+{"codigoVencimento":"v110","valorVencimento":"6840.15"}
+	],
+"modalidade":"0210","variacaoCambial":"N"},
+{"modalidade":"1304","variacaoCambial":"N",
+"listaDeVencimentos":[
+	{"codigoVencimento":"v140","valorVencimento":"1882.70"},
+	{"codigoVencimento":"v150","valorVencimento":"824.61"},
+	{"codigoVencimento":"v110","valorVencimento":"17748.86"},
+	{"codigoVencimento":"v120","valorVencimento":"1596.34"},
+	{"codigoVencimento":"v130","valorVencimento":"948.70"}
+	]},
+{"modalidade":"0204","variacaoCambial":"N",
+"listaDeVencimentos":[
+	{"codigoVencimento":"v210","valorVencimento":"9993.70"},
+	{"codigoVencimento":"v220","valorVencimento":"23015.22"},
+	{"codigoVencimento":"v110","valorVencimento":"6446.54"}
+	]},
+
+
+{"variacaoCambial":"N","listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"745644.68"},{"codigoVencimento":"v150","valorVencimento":"755814.92"}],"modalidade":"0801"},
+
+
+0801-v140-745644.68, 0801-v150-755814.92, 1902-v20-5000.00
+* tabular verticalmente: cada linha corresponde a um CNPJ, de um periodo_base e de UMA MODALIDADE (e dentro desta modalidade seus codigoVencimentos+valorVencimento tabulado na horizontal)
+
+{"variacaoCambial":"N","listaDeVencimentos":[{"codigoVencimento":"v20","valorVencimento":"5000.00"}],"modalidade":"1902"}]
+
+modalidade,
+codvenc,valor,codvenc,valor,codvenc,valor...
+
+
+
+[{"modalidade":"0210","variacaoCambial":"N","listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"1463.73"},{"codigoVencimento":"v150","valorVencimento":"2927.46"},{"codigoVencimento":"v160","valorVencimento":"5854.92"},{"valorVencimento":"487.94","codigoVencimento":"v110"},{"codigoVencimento":"v120","valorVencimento":"487.91"},{"codigoVencimento":"v130","valorVencimento":"487.91"}]},{"listaDeVencimentos":[{"codigoVencimento":"v40","valorVencimento":"13470.37"},{"valorVencimento":"147754.91","codigoVencimento":"v20"}],"modalidade":"1905","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"6993.81"},{"codigoVencimento":"v150","valorVencimento":"13987.62"},{"codigoVencimento":"v160","valorVencimento":"7051.76"},{"codigoVencimento":"v110","valorVencimento":"8865.25"},{"valorVencimento":"2331.27","codigoVencimento":"v120"},{"valorVencimento":"2331.27","codigoVencimento":"v130"}],"modalidade":"0217","variacaoCambial":"N"},{"modalidade":"0499","variacaoCambial":"N","listaDeVencimentos":[{"valorVencimento":"13532.01","codigoVencimento":"v140"},{"codigoVencimento":"v150","valorVencimento":"27063.99"},{"codigoVencimento":"v160","valorVencimento":"54128.07"},{"valorVencimento":"4510.65","codigoVencimento":"v110"},{"codigoVencimento":"v170","valorVencimento":"14919.95"},{"codigoVencimento":"v120","valorVencimento":"4510.68"},{"codigoVencimento":"v130","valorVencimento":"4510.65"},{"valorVencimento":"54127.87","codigoVencimento":"v165"}]},{"listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"3697.41"},{"codigoVencimento":"v150","valorVencimento":"7394.82"},{"codigoVencimento":"v160","valorVencimento":"13557.13"},{"valorVencimento":"6373.36","codigoVencimento":"v170"},{"codigoVencimento":"v165","valorVencimento":"14789.58"}],"modalidade":"0216","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v150","valorVencimento":"6486.79"}],"modalidade":"0213","variacaoCambial":"N"},{"modalidade":"1902","variacaoCambial":"N","listaDeVencimentos":[{"codigoVencimento":"v20","valorVencimento":"542.07"}]},{"modalidade":"1304","variacaoCambial":"N","listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"2324.39"},{"codigoVencimento":"v150","valorVencimento":"842.62"},{"codigoVencimento":"v110","valorVencimento":"6187.80"},{"codigoVencimento":"v120","valorVencimento":"1652.50"},{"codigoVencimento":"v130","valorVencimento":"1135.84"}]},{"variacaoCambial":"N","listaDeVencimentos":[{"codigoVencimento":"v40","valorVencimento":"25607.00"}],"modalidade":"1904"},{"listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"9233.31"},{"codigoVencimento":"v150","valorVencimento":"18466.62"},{"codigoVencimento":"v160","valorVencimento":"35928.95"},{"codigoVencimento":"v110","valorVencimento":"3077.77"},{"codigoVencimento":"v120","valorVencimento":"3077.77"},{"codigoVencimento":"v130","valorVencimento":"3077.77"}],"modalidade":"0490","variacaoCambial":"N"}]
+
+[{"listaDeVencimentos":[{"codigoVencimento":"v110","valorVencimento":"3566.70"}],"modalidade":"0210","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v40","valorVencimento":"132386.18"},{"codigoVencimento":"v20","valorVencimento":"11847.02"}],"modalidade":"1905","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"6993.81"},{"codigoVencimento":"v210","valorVencimento":"3230.90"},{"codigoVencimento":"v150","valorVencimento":"13987.62"},{"codigoVencimento":"v160","valorVencimento":"9345.61"},{"codigoVencimento":"v110","valorVencimento":"15663.19"},{"codigoVencimento":"v120","valorVencimento":"8865.23"},{"codigoVencimento":"v130","valorVencimento":"2331.27"}],"modalidade":"0217","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v130","valorVencimento":"4510.68"},{"codigoVencimento":"v150","valorVencimento":"27063.99"},{"codigoVencimento":"v120","valorVencimento":"4510.65"},{"codigoVencimento":"v170","valorVencimento":"19262.14"},{"codigoVencimento":"v140","valorVencimento":"13531.98"},{"valorVencimento":"4510.68","codigoVencimento":"v110"},{"codigoVencimento":"v165","valorVencimento":"54127.92"},{"codigoVencimento":"v210","valorVencimento":"6668.59"},{"codigoVencimento":"v160","valorVencimento":"54128.05"}],"modalidade":"0499","variacaoCambial":"N"},{"modalidade":"0216","variacaoCambial":"N","listaDeVencimentos":[{"valorVencimento":"2436.84","codigoVencimento":"v140"},{"codigoVencimento":"v150","valorVencimento":"7310.52"},{"codigoVencimento":"v160","valorVencimento":"13402.62"},{"codigoVencimento":"v170","valorVencimento":"7431.15"},{"codigoVencimento":"v165","valorVencimento":"14621.04"}]},{"listaDeVencimentos":[{"codigoVencimento":"v110","valorVencimento":"7934.99"}],"modalidade":"0213","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v140","valorVencimento":"2790.96"},{"codigoVencimento":"v150","valorVencimento":"1511.89"},{"codigoVencimento":"v110","valorVencimento":"10140.91"},{"codigoVencimento":"v120","valorVencimento":"1853.75"},{"codigoVencimento":"v130","valorVencimento":"1652.50"}],"modalidade":"1304","variacaoCambial":"N"},{"listaDeVencimentos":[{"codigoVencimento":"v110","valorVencimento":"11913.77"}],"modalidade":"0204","variacaoCambial":"N"},{"listaDeVencimentos":[{"valorVencimento":"9183.81","codigoVencimento":"v140"},{"codigoVencimento":"v210","valorVencimento":"3301.90"},{"codigoVencimento":"v150","valorVencimento":"18367.62"},{"codigoVencimento":"v160","valorVencimento":"38749.44"},{"codigoVencimento":"v110","valorVencimento":"3061.27"},{"codigoVencimento":"v120","valorVencimento":"3061.27"},{"codigoVencimento":"v130","valorVencimento":"3061.27"}],"modalidade":"0490","variacaoCambial":"N"}]
+
