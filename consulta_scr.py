@@ -7,6 +7,7 @@ def main():
         sheet = pd.read_csv(file)
         df = pd.DataFrame(sheet)
         # df.insert(len(df.columns)-1, 'message.listaDeResumoDasOperacoes', df.pop('message.listaDeResumoDasOperacoes'))
+        data_parsed = []
 
         # column_names_source = [
         #     _id,
@@ -14,14 +15,18 @@ def main():
         #     message.codigoDoCliente,
         #     message.dataBaseConsultada,
         #     message.listaDeResumoDasOperacoes
+        # 'cnpjCliente',
+        # 'dataConsulta',
+        # 'dataBase',
+        # 'codigoModalidade',
         # ]
 
         column_names_parsed = [
             '_id',
-            'cnpjCliente',
-            'dataConsulta',
-            'dataBase',
-            'codigoModalidade',
+            'message.cnpjDaIFSolicitante',
+            'createdAt',
+            'message.dataBaseConsultada',
+            'modalidade',
             'v20',
             'v40',
             'v60',
@@ -55,14 +60,22 @@ def main():
             'v330'
         ]
         df_parsed = pd.DataFrame(columns=column_names_parsed)
-        df_parsed['_id'] = df['_id']
 
+
+
+
+        # for row in df.iterrows():
+        #     for col, item in row[1].items():
+        #         data_dict = {}
+        #         data_dict['_id'] = item
+
+        # print(df_parsed)
         # id_parsed = df['_id']
         # print(id_parsed)
 
-        for row, item in df_parsed['_id'].iteritems():
-            print(row, type(row))
-            print(item, type(item))
+        # for row, item in df_parsed['_id'].iteritems():
+        #     print(row, type(row))
+        #     print(item, type(item))
 
         #     # extrair a coluna com o json e atribuir a outro dataframe
         #     df_json = pd.DataFrame.pop(row['message.listaDeResumoDasOperacoes'])
