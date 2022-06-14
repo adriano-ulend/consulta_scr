@@ -56,7 +56,7 @@ def main():
         for e, line in enumerate(sheet):
             #    line 0 = headers
             if e == 0:
-                header = [line[0], line[1], line[3], line[4], line[7], 'modalidade', 'cod-val']
+                header = [line[0], line[1], line[4], line[7], 'dict_mod_CodigoValor']
                 data_header.append(header)
             else:
                 json_line = json.loads(line[10])
@@ -70,26 +70,34 @@ def main():
                     # list_temp = []
                     modalidade = item['modalidade']
 
+                    vencimento_temp = {}
+                    mod_venc_temp = {}
                     for data_venc in item['listaDeVencimentos']:
-                        vencimento_temp = ''
-                        vencimento_temp = f"{data_venc['codigoVencimento']}-{data_venc['valorVencimento']}"
+                        vencimento_temp[f"{data_venc['codigoVencimento']}"] = f"{data_venc['valorVencimento']}"
                         # print(vencimento_temp)
 
-                        selected_params = [line[0], line[1], line[3], line[4], line[7], modalidade, vencimento_temp]
-                        data_list.append(selected_params)
+                        mod_venc_temp[f"{modalidade}"] = vencimento_temp
+
+                    selected_params = [line[0], line[1], line[4], line[7], mod_venc_temp]
+                    data_list.append(selected_params)
 
         table = pd.DataFrame(data_list, columns=data_header)
-        df_cod_val = table.pop('cod-val')
+        df_cod_val = table.pop('dict_mod_CodigoValor')
+        # print(type(df_cod_val))
+        dict_cod_val = df_cod_val.to_dict(orient='list')
+        # print(dict_cod_val)
         df_vencimentos = pd.DataFrame(columns=column_names_parsed)
 
-        for index, val in df_cod_val.iterrows():
-            # print(index, type(index))
-            # print(val, type(val))
-            d1 = val.str.split('-')
-            print(str(d1[0]), " >> ", str(d1[1]))
+        for dict_item in dict_cod_val.values():
+            for dict_value in dict_item:
+                for cod_v, val_v in dict_value.items():
+                    df_vencimentos.loc[df_vencimentos.shape[0], 'modalidade'] = cod_v
 
-        # verificar como trazer os valores separados de codVencimento e valorVencimento (em d1) gerados no df_cod_val
-        # ver como adicionar o valor vencimento a coluna codVencimento do df_vencimento
+                    for venc_cod, vencim_valor in val_v.items():
+                        # colum_index = column_names_parsed.index(venc_cod)
+                        df_vencimentos.loc[df_vencimentos.shape[0] - 1, f"{venc_cod}"] = vencim_valor
+
+        print(df_vencimentos)
 
 
 if __name__ == '__main__':
