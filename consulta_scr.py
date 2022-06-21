@@ -1,108 +1,76 @@
 import pandas as pd
 import json
+import requests
+import os
 
 
-def main():
-    with open('/home/adriano/dev/projects/consulta_scr/source/teste2.csv', 'r', encoding='utf-8') as file:
-        sheet = pd.read_csv(file)
-        df = pd.DataFrame(sheet)
-        # df.insert(len(df.columns)-1, 'message.listaDeResumoDasOperacoes', df.pop('message.listaDeResumoDasOperacoes'))
-        data_parsed = []
+current_path = os.getcwd()
 
-        # column_names_source = [
-        #     _id,
-        #     message.cnpjDaIFSolicitante,
-        #     message.codigoDoCliente,
-        #     message.dataBaseConsultada,
-        #     message.listaDeResumoDasOperacoes
-        # 'cnpjCliente',
-        # 'dataConsulta',
-        # 'dataBase',
-        # 'codigoModalidade',
-        # ]
+def token():
+    try:
+        # api = "https://localhost:8081"
+        api = "https://api.ulend.com.br"
 
-        column_names_parsed = [
-            '_id',
-            'message.cnpjDaIFSolicitante',
-            'createdAt',
-            'message.dataBaseConsultada',
-            'modalidade',
-            'v20',
-            'v40',
-            'v60',
-            'v80',
-            'v110',
-            'v120',
-            'v130',
-            'v140',
-            'v150',
-            'v160',
-            'v165',
-            'v170',
-            'v175',
-            'v180',
-            'v190',
-            'v199',
-            'v205',
-            'v210',
-            'v220',
-            'v230',
-            'v240',
-            'v245',
-            'v250',
-            'v255',
-            'v260',
-            'v270',
-            'v280',
-            'v290',
-            'v310',
-            'v320',
-            'v330'
-        ]
-        df_parsed = pd.DataFrame(columns=column_names_parsed)
+        # user = "gabriel@ulend.com.br"
+        # password = "teste123"
+        user = "report-service@ulend.com.br"
+        password = "report"
+        r = requests.post(
+            f"{api}/auth/email/signin",
+            json = {"email": user, "password": password}
+        )
+
+        response_json = r.json()
+        token = response_json["token"]
+    
+        return token
+    
+    except Exception as err:
+        return err
 
 
+def check_scr(cnpj, data_op):
 
+    endpoint_scr = 'https://api.ulend.com.br/partner-bank/scr'
 
-        # for row in df.iterrows():
-        #     for col, item in row[1].items():
-        #         data_dict = {}
-        #         data_dict['_id'] = item
+    cnpj = cnpj
+    data_base = data_op
 
-        # print(df_parsed)
-        # id_parsed = df['_id']
-        # print(id_parsed)
+    body_json = {
+        "base": f"{data_base}", # base no formato ano-mes
+        "document": f"{cnpj}"    # cnpj (so int mas como string)
+    }
 
-        # for row, item in df_parsed['_id'].iteritems():
-        #     print(row, type(row))
-        #     print(item, type(item))
+    res = requests.post(
+        endpoint_scr, 
+        json=body_json, 
+        headers = {
+            "Authorization": f'{token}'
+        }
+    )
 
-        #     # extrair a coluna com o json e atribuir a outro dataframe
-        #     df_json = pd.DataFrame.pop(row['message.listaDeResumoDasOperacoes'])
-        #     df_teste = df_json
-        #
-        #     # coluna do json passando os dados pra list
-        #     json1 = json.loads(df_teste)
-        #     print('num de objetos do json: ', len(json1))
-        #     # print(json1)
-        #     # print(type(json1))  # list
-        #
-        # # routine trough all the rows
-        # for row in json1:
-        #     print(len(row))
-        #     # print(row)
-        #
-        # df_parsed['cnpjCliente'] = df['message.cnpjDaIFSolicitante']
-        # df_parsed['dataConsulta'] = df['createdAt']
-        # df_parsed['dataBase'] = df['message.dataBaseConsultada']
-        # print(df_parsed)
+    res_content = res.content
+    res_status = res.status_code
 
-        # df2 = pd.DataFrame(pd.json_normalize(df['message.listaDeResumoDasOperacoes']))
-        # print(df2)
+    return res, res_status
 
-        # makes a copy of parsed dataframe to another excel file
-        # df.to_excel('/home/adriano/dev/projects/Teste/source/parsed.xlsx', index=False)
-        # return df    # retornar o dataframe final
+def extract():
+    with open(f'{current_path}'+'/source/teste3.csv', 'r', encoding='utf-8') as file:
+        sheet = pd.read_csv(file, encoding='utf-8')
+        client_source = pd.DataFrame(sheet, index=True)
+
+    return client_source
+
 
 if __name__ == '__main__':
-    print(main())
+    print("SCR CONSULTING\n")
+
+    token = token()
+    print(token)
+
+    cnpj_teste = '57480048000161'
+    data_teste = '2021-08'
+
+    print(check_scr(cnpj_teste, data_teste))
+
+    print("\nend\n")
