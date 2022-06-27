@@ -30,7 +30,15 @@ def token():
         return err
 
 
-def check_scr(token, cnpj, data_op):
+def check_scr(session_token, cnpj, data_op):
+    """
+    Check scr data when the response from mongoDB is None for a scr analysis in a credit analysis of company
+
+    :param session_token:
+    :param cnpj:
+    :param data_op:
+    :return:
+    """
 
     endpoint_scr = 'https://api.ulend.com.br/partner-bank/scr'
 
@@ -46,46 +54,30 @@ def check_scr(token, cnpj, data_op):
         endpoint_scr, 
         params=body_json,
         headers={
-            "Authorization": f'{token}'
+            "Authorization": f'{session_token}'
         }
     )
 
-    res_content = res.json()
     res_status = res.status_code
 
     return res_status
 
 
-def scr_hist(token, cnpj):
+def scr_hist(session_token, uuid):
+    """
+    Extract from credit analysis of a company the history (last 12 months) of his scr consulting existed on mongoDB
+
+    :param session_token: token from user report-service@ulend.com.br
+    :param uuid: primary key set for company id field (only for company with approval for operating)
+    :return: json with scr consulting history (last 12 months)
     """
 
-    :param token:
-    :param cnpj:
-    :return:
-    """
-
-    endpoint_company_data = f"https://api.ulend.com.br/company"
-
-    response_company = requests.get(
-        endpoint_company_data,
-        headers={
-            "Accept-version": 'v2+',
-            "Authorization": f'{token}'
-        },
-        params={"cnpj": f"{cnpj}"}
-    )
-
-    response_company_json = response_company.json()
-
-    cod_cliente = response_company_json['companies'][0]['uuid']
-    # cod_cliente = '5aShIs_VEeyDTgJCrBYABA'  # uuid
-
-    endpoint_hist = f"https://api.ulend.com.br/company/{cod_cliente}/credit-analysis-of-company"
+    endpoint_hist = f"https://api.ulend.com.br/company/{uuid}/credit-analysis-of-company"
 
     res_hist = requests.get(
         endpoint_hist,
         headers={
-            "Authorization": f'{token}'
+            "Authorization": f'{session_token}'
         }
     )
     res_json = res_hist.json()
@@ -94,7 +86,7 @@ def scr_hist(token, cnpj):
     return scr_data
 
 
-def extract() -> list:
+def extract() -> pd.DataFrame:
     """
     Open a csv file to extract cnpj data from all clients on system database
     :return: list of all cnpj/uuid to be checked on credit-analysis
@@ -119,13 +111,12 @@ def all_clients(token_prod):
             "Accept-version": 'v1+',
             "Authorization": f'{token_prod}'
         },
-        params={"page": "1", "limit": "500"}
+        params={"page": "1", "limit": "50"}
     )
     response_all_clients_json = response_all_clients.json()
 
-    for client in response_all_clients_json['loan']:
+    for client in response_all_clients_json['loans']:
         all_clients_temp.append(client['company_cnpj'])
-        all_clients_temp.append(client['uuid'])
         all_clients_temp.append(client['company_name'])
         all_clients_data.append(all_clients_temp)
         all_clients_temp = []
@@ -133,34 +124,67 @@ def all_clients(token_prod):
     return all_clients_data
 
 
+def get_client_uuid(token, cnpj):
+
+    endpoint_client_uuid = f"https://api.ulend.com.br/company/-"
+
+    response_all_clients = requests.get(
+        endpoint_client_uuid,
+        headers={
+            "Accept-version": 'v2+',
+            "Authorization": f'{token}'
+        },
+        params={"cnpj": f"{cnpj}"}
+    )
+    response_client_uuid_json = response_all_clients.json()
+    client_uuid = response_client_uuid_json['company']['uuid']
+
+    return client_uuid
+
 if __name__ == '__main__':
     print("SCR CONSULTING\n")
 
-
     signin_token = token()
-    print(signin_token)
+    # print(signin_token)
 
-    all_clients(signin_token)
-    print('ok')
+    data_clients = all_clients(signin_token)
+    print(data_clients)
+    data_scr = []
 
     # t = extract()
     # print(t)
 
-    cnpj_teste = '06914893000167'   # comercio de pneus anadia ltda
+    # cnpj_teste = '06914893000167'   # comercio de pneus anadia ltda
     data_teste = '2021-08'  # 2022-04 a 2021-05
     # id_teste = '62a7a27b4f7b441597ae3fd8'   # id no sistema do cliente
 
-    print(check_scr(signin_token, cnpj_teste, data_teste))
+    for item in data_clients:
+        client_cnpj = item[0]
+        client_name = item[1]
+        try:
+            client_uuid = get_client_uuid(signin_token, client_cnpj)
+            historic_scr = scr_hist(signin_token, client_uuid)
+            if len(historic_scr) == 0 :
+                data_scr.append('historic direct from SCR consult')
+            else:
+                data_scr.append("1")
+                # data_scr.append(historic_scr)
+        except:
+            # historic_scr = check_scr(signin_token, client_cnpj, data_teste)
+            data_scr.append('historic direct from SCR consult')
 
-    print(scr_hist(signin_token, cnpj_teste))
+    print(data_scr)
 
     print("\nend\n")
 
+
+
+
 # CHECKLIST:
-# 1. verificar como retornar o uuid do cliente para buscar o historico scr no mongo - all_list >> search
-#     1.1. response de company/-/loan gera uma lista com info de clients (atende a demanda a ser analisada?)
-# 2. testar condicional caso nao tenha historico de consulta scr na analise de credito
-#     2.1. se nao tiver faz uma consulta scr dos ultimos 12 meses
-# 3. validar response data da request para realizar uma nova consulta scr
-# 4. varificar possiveis cenarios de erro (realizar teste com source file_test pelo extract)
-# 5. validar output para ser input do parsed_scr
+# 1. verificar se o uuid esta retornando o cliente correto (com historico de consulta scr no sistema)
+#     1.1 check se os mais antigos tem esse problema (historico vazio)
+#     1.2 testes de retorno dos dados (clientes antigos/novos, formatacao, duplicados, etc)
+# 2. validar response data da request para realizar uma nova consulta scr
+#     2.1 validar tanto os dados existentes no sistema como os da nova consulta (nova consulta = ano de 2021)
+# 3. verificar possiveis cenarios de erro (realizar teste com source file_test pelo extract)
+# 4. validar output para ser input do parsed_scr
