@@ -2,6 +2,8 @@ import pandas as pd
 import json
 import requests
 import os
+import itertools
+import datetime
 
 
 current_path = os.getcwd()
@@ -32,7 +34,7 @@ def token():
 
 def check_scr(session_token, cnpj, data_op):
     """
-    Check scr data when the response from mongoDB is None for a scr analysis in a credit analysis of company
+    Check scr_data when the response from mongoDB is None for a scr analysis in a credit analysis of selected company
 
     :param session_token:
     :param cnpj:
@@ -111,7 +113,7 @@ def all_clients(token_prod):
             "Accept-version": 'v1+',
             "Authorization": f'{token_prod}'
         },
-        params={"page": "1", "limit": "50"}
+        params={"page": "1", "limit": "500"}
     )
     response_all_clients_json = response_all_clients.json()
 
@@ -141,50 +143,90 @@ def get_client_uuid(token, cnpj):
 
     return client_uuid
 
+
 if __name__ == '__main__':
+    start = datetime.datetime.now()
     print("SCR CONSULTING\n")
 
     signin_token = token()
     # print(signin_token)
 
     data_clients = all_clients(signin_token)
-    print(data_clients)
+    # data_clients.reverse()
+    # print(data_clients)
     data_scr = []
+    list_scr = []
+    new_scr = []
+
 
     # t = extract()
     # print(t)
 
     # cnpj_teste = '06914893000167'   # comercio de pneus anadia ltda
-    data_teste = '2021-08'  # 2022-04 a 2021-05
+    # data_teste = '2021-08'  # 2022-04 a 2021-05
     # id_teste = '62a7a27b4f7b441597ae3fd8'   # id no sistema do cliente
 
-    for item in data_clients:
-        client_cnpj = item[0]
-        client_name = item[1]
+    for item in data_clients[:3]:
+        """
+        5 fresh first companys
+        ['07283581000165', 'THEMMA TRANSPORTES E LOGISTICA INTERNACIONAL DE CARGAS LTDA']
+        ['07283581000165', 'THEMMA TRANSPORTES E LOGISTICA INTERNACIONAL DE CARGAS LTDA']
+        ['07283581000165', 'THEMMA TRANSPORTES E LOGISTICA INTERNACIONAL DE CARGAS LTDA']
+        ['73420838000108', 'LEANDRO MARANGONI COMERCIO DE COMBUSTIVEIS LTDA']
+        ['15626673000129', 'NORTESUL COMERCIAL AGRICOLA LTDA']
+        
+        5 oldest companys
+        ['16821725000180', 'LAVMIX LAVANDERIA PROFISSIONAL LTDA']
+        ['05913922000103', 'WILMER HORTIFRUTIGRANJEIRO LTDA']
+        ['28830783000150', 'CUCINA COMERCIAL LTDA']
+        ['13671179000150', 'HABITAR IMOVEIS LTDA']
+        ['23199116000105', 'SEGURA INTEGRACAO E SOLUCOES EM SEGURANCA ELETRONICA EIRELI']
+        """
+        if item not in list_scr:
+            list_scr.append(item)
+    print(list_scr)
+
+    for company in list_scr:
+        client_cnpj = company[0]
+        # client_name = company[1]
+
         try:
             client_uuid = get_client_uuid(signin_token, client_cnpj)
+            # print(client_uuid)
             historic_scr = scr_hist(signin_token, client_uuid)
-            if len(historic_scr) == 0 :
-                data_scr.append('historic direct from SCR consult')
+            if len(historic_scr) == 0:
+                data_scr.append('historic empty - make a new SCR consult')
             else:
-                data_scr.append("1")
-                # data_scr.append(historic_scr)
-        except:
-            # historic_scr = check_scr(signin_token, client_cnpj, data_teste)
-            data_scr.append('historic direct from SCR consult')
+                # data_scr.append("1")
+                data_scr.append(historic_scr)
+
+        except Exception as err:
+            print("step into except loop")
+            for month in range (1, 13):
+                if month < 10:
+                    data_teste = f"2021-0{month}"
+                    historic_scr = check_scr(signin_token, client_cnpj, data_teste)
+                    new_scr.append(historic_scr)
+                else:
+                    data_teste = f"2021-{month}"
+                    historic_scr = check_scr(signin_token, client_cnpj, data_teste)
+                    new_scr.append(historic_scr)
+            data_scr.append(new_scr)
+            new_scr = []
+            # data_scr.append('historic not found - direct from SCR consult')
 
     print(data_scr)
 
     print("\nend\n")
-
-
+    end = f"Exec time: {datetime.datetime.now() - start}"
+    print(end)
 
 
 # CHECKLIST:
-# 1. verificar se o uuid esta retornando o cliente correto (com historico de consulta scr no sistema)
-#     1.1 check se os mais antigos tem esse problema (historico vazio)
-#     1.2 testes de retorno dos dados (clientes antigos/novos, formatacao, duplicados, etc)
-# 2. validar response data da request para realizar uma nova consulta scr
+# OK 1. verificar se o uuid esta retornando o cliente correto (com historico de consulta scr no sistema)
+# OK     1.1 check se os mais antigos tem esse problema (historico vazio)
+# OK     1.2 testes de retorno dos dados (clientes antigos/novos, formatacao, duplicados, etc)
+# OK 2. validar response data da request para realizar uma nova consulta scr
 #     2.1 validar tanto os dados existentes no sistema como os da nova consulta (nova consulta = ano de 2021)
 # 3. verificar possiveis cenarios de erro (realizar teste com source file_test pelo extract)
 # 4. validar output para ser input do parsed_scr
