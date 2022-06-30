@@ -10,6 +10,10 @@ current_path = os.getcwd()
 
 
 def token():
+    """
+    Create token authentication for user in production
+    :return: string
+    """
     try:
         # api = "https://localhost:8081"
         api = "https://api.ulend.com.br"
@@ -36,10 +40,10 @@ def check_scr(session_token, cnpj, data_op):
     """
     Check scr_data when the response from mongoDB is None for a scr analysis in a credit analysis of selected company
 
-    :param session_token:
-    :param cnpj:
-    :param data_op:
-    :return:
+    :param session_token: string
+    :param cnpj: string (only numbers)
+    :param data_op: string (YYYY-MM)
+    :return: status code 201 (have company data on database) or 422 (doesnt have any data in database for that company)
     """
 
     endpoint_scr = 'https://api.ulend.com.br/partner-bank/scr'
@@ -69,9 +73,9 @@ def scr_hist(session_token, uuid):
     """
     Extract from credit analysis of a company the history (last 12 months) of his scr consulting existed on mongoDB
 
-    :param session_token: token from user report-service@ulend.com.br
-    :param uuid: primary key set for company id field (only for company with approval for operating)
-    :return: json with scr consulting history (last 12 months)
+    :param session_token: string (token from user report-service@ulend.com.br)
+    :param uuid: string (primary key set for company id field, only for company with approval for operating)
+    :return: json (scr consulting history for the last 12 months)
     """
 
     endpoint_hist = f"https://api.ulend.com.br/company/{uuid}/credit-analysis-of-company"
@@ -90,7 +94,7 @@ def scr_hist(session_token, uuid):
 
 def extract() -> pd.DataFrame:
     """
-    Open a csv file to extract cnpj data from all clients on system database
+    Extract scr_data_analysis informations and plot in a CSV file to be used on parsed_scr.py as an input
     :return: list of all cnpj/uuid to be checked on credit-analysis
     """
     with open(f'{current_path}'+'/source/teste3.csv', 'r', encoding='utf-8') as file:
@@ -101,6 +105,11 @@ def extract() -> pd.DataFrame:
 
 
 def all_clients(token_prod):
+    """
+    List of all CNPJ from company that have a loan registered on the system
+    :param token_prod: string (token from user report-service@ulend.com.br)
+    :return: list with all company name + cnpj on the plataform
+    """
 
     all_clients_data = []
     all_clients_temp = []
@@ -127,6 +136,12 @@ def all_clients(token_prod):
 
 
 def get_client_uuid(token, cnpj):
+    """
+    From company cnpj extract his uuid on the plataform
+    :param token: string (token from user report-service@ulend.com.br)
+    :param cnpj: string (only numbers)
+    :return: string (uuid key)
+    """
 
     endpoint_client_uuid = f"https://api.ulend.com.br/company/-"
 
@@ -145,6 +160,12 @@ def get_client_uuid(token, cnpj):
 
 
 def client_scr(token, cnpj) -> list:
+    """
+    when company doesnt have any credit_analysis data, extract monthly scr_consult from 2021
+    :param token: token: string (token from user report-service@ulend.com.br)
+    :param cnpj: string (only numbers)
+    :return: list with scr_consult for each month in 2021 for an specific company
+    """
 
     new_scr = []
 
@@ -169,7 +190,7 @@ if __name__ == '__main__':
     # print(signin_token)
 
     data_clients = all_clients(signin_token)
-    data_clients.reverse()
+    data_clients.reverse()  # bring the newest company first
     # print(data_clients)
     data_scr = []
     list_scr = []
@@ -243,10 +264,3 @@ if __name__ == '__main__':
     print("\nend\n")
     end = f"Exec time: {datetime.datetime.now() - start}"
     print(end)
-
-
-# CHECKLIST:
-
-# 1. validar formatacao tanto os dados existentes no sistema como os da nova consulta (nova consulta = ano de 2021)
-# 3. verificar possiveis cenarios de erro (realizar teste com source file_test pelo extract)
-# 4. validar output para ser input do parsed_scr (atualizar parser para receber o novo input)
